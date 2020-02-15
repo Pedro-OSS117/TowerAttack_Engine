@@ -1,0 +1,33 @@
+Library/
+Temp/
+Assets/JMO Assets/
+Assets/ProCore/
+Assets/Standard Assets/
+Assets/InControl/
+Assets/ResourcesLocal/Previous/Spine/
+Assets/Art/Example.meta
+Assets/Art/Example/
+Conception/
+Photoshop/
+References/
+.vs/
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+*.csproj
+*.userprefs
+*.sln
