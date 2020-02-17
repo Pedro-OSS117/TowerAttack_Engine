@@ -11,11 +11,20 @@ public class MapData
     [Range(1, 50)]
     public int height;
 
+    [Header("Squares Properties")]
     public SquareData[] grid;
 
+    [Range(0, 100)]
+    public int percentSquareLock = 50;
+
+    [Header("Edges Properties")]
     public bool[] edgesHori;
+    [Range(0, 100)]
+    public int percenteEdgeHori = 50;
 
     public bool[] edgesVert;
+    [Range(0, 100)]
+    public int percentEdgeVert = 50;
 
 }
 
