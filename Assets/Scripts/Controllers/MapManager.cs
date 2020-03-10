@@ -60,6 +60,13 @@ public class MapManager : MonoBehaviour
     public void CreateMapViewFromData()
     {
         // ====== Creation de la View
+        if (navContainer == null)
+        {
+            navContainer = new GameObject("NavContainer");
+            navContainer.transform.position = Vector3.zero;
+            navContainer.transform.SetParent(transform);
+        }
+
         // Clean NavContainer
         DestroyAllChild(navContainer);
 
@@ -413,6 +420,7 @@ public class MapManager : MonoBehaviour
         // Bake NavMesh
         NavMeshSurface surfaceComponent = surface.GetComponent<NavMeshSurface>();
         surfaceComponent.BuildNavMesh();
+        surfaceComponent.transform.SetAsFirstSibling();
     }
     #endregion SURFACE
 
@@ -433,28 +441,34 @@ public class MapManager : MonoBehaviour
         Vector3 scaleHori = (Vector3.one) / 10;
         scaleHori.x = 0.8f;
 
-        // Parcours des élements du tableau via un for.
-        for (int i = 0; i < mapData.edgesHori.Length; i++)
+        if (mapData.edgesHori != null)
         {
-            if(mapData.edgesHori[i])
+            // Parcours des élements du tableau via un for.
+            for (int i = 0; i < mapData.edgesHori.Length; i++)
             {
-                pos = GetPositionFromIndex(i, mapData.width);
-                Gizmos.color = Color.red;
-                pos.x += 0.5f;
-                Gizmos.DrawCube(pos, scaleHori);
+                if (mapData.edgesHori[i])
+                {
+                    pos = GetPositionFromIndex(i, mapData.width);
+                    Gizmos.color = Color.red;
+                    pos.x += 0.5f;
+                    Gizmos.DrawCube(pos, scaleHori);
+                }
             }
         }
 
-        Vector3 scaleVert = (Vector3.one) / 10;
-        scaleVert.z = 0.8f;
-        for (int i = 0; i < mapData.edgesVert.Length; i++)
+        if (mapData.edgesVert != null)
         {
-            if (mapData.edgesVert[i])
+            Vector3 scaleVert = (Vector3.one) / 10;
+            scaleVert.z = 0.8f;
+            for (int i = 0; i < mapData.edgesVert.Length; i++)
             {
-                Gizmos.color = Color.blue;
-                pos = GetPositionFromIndex(i, mapData.width + 1);
-                pos.z += 0.5f;
-                Gizmos.DrawCube(pos, scaleVert);
+                if (mapData.edgesVert[i])
+                {
+                    Gizmos.color = Color.blue;
+                    pos = GetPositionFromIndex(i, mapData.width + 1);
+                    pos.z += 0.5f;
+                    Gizmos.DrawCube(pos, scaleVert);
+                }
             }
         }
 
@@ -468,48 +482,51 @@ public class MapManager : MonoBehaviour
     private void ShowGizmoMapSquares()
     {
         Vector3 pos = Vector3.zero;
-        // Parcours des élements du tableau via un for.
-        for (int i = 0; i < mapData.grid.Length; i++)
+        if (mapData.grid != null)
         {
-            pos = GetPositionFromIndex(i, mapData.width);
-            Gizmos.color = GetColorFromState(mapData.grid[i].state);
-            //Gizmos.DrawCube(pos, (Vector3.one) / 2);
+            // Parcours des élements du tableau via un for.
+            for (int i = 0; i < mapData.grid.Length; i++)
+            {
+                pos = GetPositionFromIndex(i, mapData.width);
+                Gizmos.color = GetColorFromState(mapData.grid[i].state);
+                //Gizmos.DrawCube(pos, (Vector3.one) / 2);
 
-            // Affichage 1ere ligne
-            Vector3 posFrom = pos;
-            posFrom.x += downScale;
-            posFrom.z += downScale;
-            Vector3 posTo = pos;
-            posTo.x += 1 - downScale;
-            posTo.z += downScale;
-            Gizmos.DrawLine(posFrom, posTo);
+                // Affichage 1ere ligne
+                Vector3 posFrom = pos;
+                posFrom.x += downScale;
+                posFrom.z += downScale;
+                Vector3 posTo = pos;
+                posTo.x += 1 - downScale;
+                posTo.z += downScale;
+                Gizmos.DrawLine(posFrom, posTo);
 
-            // Affichage 2eme ligne
-            posFrom = pos;
-            posTo = pos;
-            posFrom.x += 1 - downScale;
-            posFrom.z += downScale;
-            posTo.x += 1 - downScale;
-            posTo.z += 1 - downScale;
-            Gizmos.DrawLine(posFrom, posTo);
+                // Affichage 2eme ligne
+                posFrom = pos;
+                posTo = pos;
+                posFrom.x += 1 - downScale;
+                posFrom.z += downScale;
+                posTo.x += 1 - downScale;
+                posTo.z += 1 - downScale;
+                Gizmos.DrawLine(posFrom, posTo);
 
-            // Affichage 3eme ligne
-            posFrom = pos;
-            posTo = pos;
-            posFrom.x += 1 - downScale;
-            posFrom.z += 1 - downScale;
-            posTo.x += downScale;
-            posTo.z += 1 - downScale;
-            Gizmos.DrawLine(posFrom, posTo);
+                // Affichage 3eme ligne
+                posFrom = pos;
+                posTo = pos;
+                posFrom.x += 1 - downScale;
+                posFrom.z += 1 - downScale;
+                posTo.x += downScale;
+                posTo.z += 1 - downScale;
+                Gizmos.DrawLine(posFrom, posTo);
 
-            // Affichage 4eme ligne
-            posFrom = pos;
-            posTo = pos;
-            posFrom.x += downScale;
-            posFrom.z += 1 - downScale;
-            posTo.x += downScale;
-            posTo.z += downScale;
-            Gizmos.DrawLine(posFrom, posTo);
+                // Affichage 4eme ligne
+                posFrom = pos;
+                posTo = pos;
+                posFrom.x += downScale;
+                posFrom.z += 1 - downScale;
+                posTo.x += downScale;
+                posTo.z += downScale;
+                Gizmos.DrawLine(posFrom, posTo);
+            }
         }
     }
 

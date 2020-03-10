@@ -34,7 +34,7 @@ public class MapEditor : Editor
     private bool m_IsAddOrRemoveEdge = true;
 
     // Map Properties
-    private bool m_ShowMapView = false;
+    private bool m_ShowMapView = true;
 
     // Global edit constraint
     private bool m_CanEditMouseAndKeyConstraints = true;
@@ -44,7 +44,10 @@ public class MapEditor : Editor
         // Recupération de l'instance editée
         m_CurrentMapTarget = (MapManager)target;
 
-        m_ShowMapView = m_CurrentMapTarget.navContainer.activeSelf;
+        if (m_CurrentMapTarget.navContainer != null)
+        {
+            m_ShowMapView = m_CurrentMapTarget.navContainer.activeSelf;
+        }
 
         LoadLastEditorState();
     }
@@ -61,17 +64,22 @@ public class MapEditor : Editor
         if (GUILayout.Button("Initialize Map Randomly"))
         {
             m_CurrentMapTarget.InitializeMapRandomly();
+            SetObjectDirty(m_CurrentMapTarget);
         }
 
         // Affichage Bouton de Reset de la map.
         if (GUILayout.Button("Initialize Empty Map"))
         {
             m_CurrentMapTarget.InitiliazeEmptyMap();
+            SetObjectDirty(m_CurrentMapTarget);
         }
 
         GUILayout.Space(10);
         m_ShowMapView = GUILayout.Toggle(m_ShowMapView, "Show View");
-        m_CurrentMapTarget.navContainer.SetActive(m_ShowMapView);
+        if (m_CurrentMapTarget.navContainer != null)
+        {
+            m_CurrentMapTarget.navContainer.SetActive(m_ShowMapView);
+        }
 
         GUILayout.Label("EDIT SQUARE", EditorStyles.boldLabel);
         m_IsInEditSquareMode = GUILayout.Toggle(m_IsInEditSquareMode, "Edit Square Mode");
