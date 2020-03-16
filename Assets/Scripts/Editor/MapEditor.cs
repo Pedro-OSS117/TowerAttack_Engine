@@ -29,7 +29,7 @@ public class MapEditor : Editor
     private readonly Vector3[] brushArrayCube = new Vector3[] { Vector3.right, Vector3.forward, new Vector3(1, 0, 1)};
     private readonly Vector3[] brushArrayL = new Vector3[] { Vector3.right, Vector3.forward, new Vector3(0, 0, 2) };    
     
-    // Vaibale Edge Edit Mode
+    // Variable Edge Edit Mode
     private bool m_IsInEditEdgeMode = false;
     private bool m_IsAddOrRemoveEdge = true;
 
@@ -44,11 +44,13 @@ public class MapEditor : Editor
         // Recupération de l'instance editée
         m_CurrentMapTarget = (MapManager)target;
 
+        // Recupération de l'état de la vue de la map
         if (m_CurrentMapTarget.navContainer != null)
         {
             m_ShowMapView = m_CurrentMapTarget.navContainer.activeSelf;
         }
 
+        // Chargement des états précédents de l'editor
         LoadLastEditorState();
     }
 
