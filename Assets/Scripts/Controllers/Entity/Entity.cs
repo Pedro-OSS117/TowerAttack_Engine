@@ -22,6 +22,8 @@ public class Entity : MonoBehaviour
     private float m_CurrentTimeBeforeNextAttack = 0;
     private bool m_CanAttack = true;
 
+    public static Vector3 myPoint = Vector3.zero;
+
     public virtual void Awake()
     {
         InitEntity();
@@ -29,7 +31,8 @@ public class Entity : MonoBehaviour
 
     public void InitEntity()
     {
-        CapsuleCollider colliderAttack = attackContainer.GetComponent<CapsuleCollider>();
+        CapsuleCollider colliderAttack;
+        colliderAttack = attackContainer.GetComponent<CapsuleCollider>();
         colliderAttack.radius = rangeDetect;
     }
 
@@ -60,7 +63,8 @@ public class Entity : MonoBehaviour
         if(life <= 0)
         {
             // Entity Die
-            GameObject.Destroy(gameObject);
+            //GameObject.Destroy(gameObject);
+            PoolManager.Instance.PoolElement(gameObject);
         }
     }
 
@@ -105,6 +109,8 @@ public class Entity : MonoBehaviour
             // On set les variables pour l'attente de l'attaque
             m_CanAttack = false;
             m_CurrentTimeBeforeNextAttack = 0;
+
+            SoundManager.Instance.PlayOneShotGlobalSound();
             return true;
         }
         return false;

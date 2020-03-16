@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 2672909135726546349}
   - component: {fileID: 2672909135726546338}
   - component: {fileID: 2672909135726546350}
+  - component: {fileID: 5003057296311961745}
   m_Layer: 9
   m_Name: PlayerEntityMoveable
   m_TagString: Untagged
@@ -210,8 +211,8 @@ MonoBehaviour:
   rangeDetect: 2
   timeWaitNextAttack: 1
   moveSpeed: 1
+  globalTarget: {fileID: 0}
   timeWaitBeforeMove: 1
-  gloablTarget: {fileID: 0}
 --- !u!54 &2672909135726546349
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -264,3 +265,16 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5003057296311961745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2672909135726546339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c92a8b211a8164ab2b712b0f817810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyPrefab: {fileID: 2672909135726546339}
