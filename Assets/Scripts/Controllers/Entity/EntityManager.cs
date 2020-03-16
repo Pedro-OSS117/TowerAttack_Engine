@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityManager : SingletonMono<EntityManager>
+public class EntityManager : MonoBehaviour
 {
     public GameObject prefabToInstantiate;
     
