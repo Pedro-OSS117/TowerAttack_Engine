@@ -23,10 +23,9 @@ public class EntityMoveable : Entity
     // Initialisation - Construction de l'entité
     public override void InitEntity()
     {
-        base.InitEntity();
-
+        base.InitEntity();        
         Debug.Log("Modif Tealrocks");
-
+        Debug.Log("Coucou Modif Pedro");
         // Initialisation - Construction
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
     }
