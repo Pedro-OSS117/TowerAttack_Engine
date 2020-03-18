@@ -54,7 +54,8 @@ public class PoolManager : SingletonMono<PoolManager>
         }
         else
         {
-            Debug.LogWarning("Try To Pool no Poolable !");
+            Debug.LogWarning("Try To Pool but no Poolable !");
+            Destroy(toPool);
         }
     }
 }

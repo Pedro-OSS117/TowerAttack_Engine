@@ -7,13 +7,15 @@ public class Entity : MonoBehaviour
     [Header("Props")]
     public Alignment alignment;
 
-    public int life = 1;
+    public int startLife = 1;
+    [SerializeField]
+    private int m_CurrentLife = 1;
 
     public int popAmount = 1;
 
     [Header("AttackProps")]
     public GameObject attackContainer;
-    public int damageAttack = 1;
+    public int damageAttack = -1;
     public int rangeDetect = 1;
 
     [Header("Time Next Attack")]
@@ -24,16 +26,26 @@ public class Entity : MonoBehaviour
 
     public static Vector3 myPoint = Vector3.zero;
 
-    public virtual void Awake()
+    public void Awake()
     {
         InitEntity();
     }
 
-    public void InitEntity()
+    // Initialisation - Construction de l'entité
+    public virtual void InitEntity()
+    {
+
+    }
+
+    // Set de l'entité lorsqu'elle est activée
+    // Elle est reset à ses valeurs de depart
+    public virtual void RestartEntity()
     {
         CapsuleCollider colliderAttack;
         colliderAttack = attackContainer.GetComponent<CapsuleCollider>();
         colliderAttack.radius = rangeDetect;
+        
+        m_CurrentLife = startLife;
     }
 
     public virtual void Update()
@@ -54,13 +66,13 @@ public class Entity : MonoBehaviour
     // Life
     private void SetLife(int amountLife)
     {
-        life = amountLife;
+        m_CurrentLife = amountLife;
     }
 
     private void DamageEntity(int damage)
     {
-        life -= damage;
-        if(life <= 0)
+        m_CurrentLife -= damage;
+        if(m_CurrentLife <= 0)
         {
             // Entity Die
             //GameObject.Destroy(gameObject);
@@ -70,7 +82,7 @@ public class Entity : MonoBehaviour
 
     private bool IsValidEntity()
     {
-        return gameObject.activeSelf && life > 0;
+        return gameObject.activeSelf && m_CurrentLife > 0;
     }
 
     // Attack
@@ -94,6 +106,10 @@ public class Entity : MonoBehaviour
             {
                 //Debug.Log("Can Hit This");
                 DoAttack(entity);
+            }
+            else if(entity && entity.alignment == alignment)
+            {
+
             }
         }
     }

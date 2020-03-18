@@ -43,15 +43,17 @@ public class EntityManager : MonoBehaviour
                 Entity entity = instantiated.GetComponent<Entity>();
                 if (entity)
                 {
-                    entity.InitEntity();
                     if (entity is EntityMoveable moveable)
                     {
                         moveable.SetGlobalTarget(globalTarget);
                     }
+                    entity.RestartEntity();
                 }
+
             }
         }
 
+        // Recuperation 
         if (Input.GetMouseButtonDown(1))
         {
             // 
