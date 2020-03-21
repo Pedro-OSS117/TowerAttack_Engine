@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityManager : MonoBehaviour
+public class EntityManager : SingletonMono<EntityManager>
 {
-    public GameObject prefabToInstantiate;
+    public GameObject prefabEntityPlayer;
+    public GameObject prefabEntityPlayerProjectile;
 
-    public GameObject prefabEnemy;
-    
-    public GameObject globalTarget;
+    // Ref vers la global target des entités Player
+    public GameObject globalTargetPlayer;
+    // Ref vers la global target des entités IA
+    public GameObject globalTargetMonster;
 
     private Camera m_CurrentCamera;
 
@@ -19,10 +21,42 @@ public class EntityManager : MonoBehaviour
 
     private void Update()
     {
-        InstantiateEnemy();
+        PopPlayerEntity();
     }
 
-    private void InstantiateEnemy()
+    // Fonction centrale.
+    // Toute instantiation d'entité doit passer par cette fonction.
+    // Elle centralise l'initialisation de l'entité.
+    public void PopElement(GameObject prefabToPop, Vector3 position)
+    {
+        GameObject newInstantiate = PoolManager.Instance.GetElement(prefabToPop);
+        newInstantiate.transform.position = position;
+        newInstantiate.SetActive(true);
+        if (newInstantiate != null)
+        {
+            Entity entity = newInstantiate.GetComponent<Entity>();
+            if (entity is EntityMoveable moveable)
+            {
+                if (moveable.alignment == Alignment.IA)
+                {
+                    moveable.SetGlobalTarget(globalTargetMonster);
+                }
+                else if (moveable.alignment == Alignment.Player)
+                {
+                    moveable.SetGlobalTarget(globalTargetPlayer);
+                }
+                entity.RestartEntity();
+            }
+        }
+        else
+        {
+            Debug.LogError("NO POOLED PREFAB : " + prefabToPop.name);
+        }
+    }
+
+    #region DEBUG PLAYER INPUT
+    // Fonction de debug pour lancer les entités du players
+    private void PopPlayerEntity()
     {
         // Creation d'un Ray à partir de la camera
         Ray ray = m_CurrentCamera.ScreenPointToRay(Input.mousePosition);
@@ -30,40 +64,16 @@ public class EntityManager : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * mult, Color.green);
 
         // Recuperation du bouton droit de la souris.
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
-            // 
+            // On recupère la bonne entité à instantier
+            GameObject prefabToInstantiate = Input.GetMouseButtonDown(0) ? prefabEntityPlayer : prefabEntityPlayerProjectile;
             if (Physics.Raycast(ray, out RaycastHit hit, mult, LayerMask.GetMask("Default")))
             {
                 // On recupère un élement depuis le poolmanager
-                GameObject instantiated = PoolManager.Instance.GetElement(prefabToInstantiate);
-                instantiated.transform.position = hit.point;
-                instantiated.SetActive(true);
-
-                Entity entity = instantiated.GetComponent<Entity>();
-                if (entity)
-                {
-                    if (entity is EntityMoveable moveable)
-                    {
-                        moveable.SetGlobalTarget(globalTarget);
-                    }
-                    entity.RestartEntity();
-                }
-
-            }
-        }
-
-        // Recuperation 
-        if (Input.GetMouseButtonDown(1))
-        {
-            // 
-            if (Physics.Raycast(ray, out RaycastHit hit, mult, LayerMask.GetMask("Default")))
-            {
-                // On recupère un élement depuis le poolmanager
-                GameObject instantiated = PoolManager.Instance.GetElement(prefabEnemy);
-                instantiated.transform.position = hit.point;
-                instantiated.SetActive(true);
+                PopElement(prefabToInstantiate, hit.point);
             }
         }
     }
+    #endregion DEBUG PLAYER INPUT
 }
