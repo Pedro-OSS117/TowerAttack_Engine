@@ -6,6 +6,7 @@ public class EntityManager : SingletonMono<EntityManager>
 {
     public GameObject prefabEntityPlayer;
     public GameObject prefabEntityPlayerProjectile;
+    public EntityData dataToInstantiate;
 
     // Ref vers la global target des entités Player
     public GameObject globalTargetPlayer;
@@ -17,11 +18,18 @@ public class EntityManager : SingletonMono<EntityManager>
     private void Awake()
     {
         m_CurrentCamera = FindObjectOfType<Camera>();
+
     }
 
     private void Update()
     {
         PopPlayerEntity();
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            // Test acces
+            GameObject newInstantiate = PoolManager.Instance.GetElement(dataToInstantiate);
+        }
     }
 
     // Fonction centrale.
@@ -37,11 +45,11 @@ public class EntityManager : SingletonMono<EntityManager>
             Entity entity = newInstantiate.GetComponent<Entity>();
             if (entity is EntityMoveable moveable)
             {
-                if (moveable.alignment == Alignment.IA)
+                if (moveable.entityData.alignment == Alignment.IA)
                 {
                     moveable.SetGlobalTarget(globalTargetMonster);
                 }
-                else if (moveable.alignment == Alignment.Player)
+                else if (moveable.entityData.alignment == Alignment.Player)
                 {
                     moveable.SetGlobalTarget(globalTargetPlayer);
                 }

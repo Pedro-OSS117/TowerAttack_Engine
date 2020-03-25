@@ -7,20 +7,15 @@ using UnityEngine.AI;
 public class EntityMoveable : Entity
 {
     [Header("Move Props")]
-    [Range(1, 50)]
-    public float moveSpeed = 1;
+    private EntityMoveableData m_EntityMoveableData = null;
 
     [Header("Target")]
     // Variable target
     public GameObject globalTarget;
     
-    [Header("Stop Time")]
     // Variable de temps d'arret
-    public float timeWaitBeforeMove = 1;
     private float m_CurrentTimeBeforeNextMove = 0;
 
-    [Header("Go To Target")]
-    public int rangeToDoAttack = 1;
     private Entity m_CurrentMoveToTarget = null;
 
     private NavMeshAgent m_NavMeshAgent;
@@ -28,10 +23,19 @@ public class EntityMoveable : Entity
     // Initialisation - Construction de l'entité
     public override void InitEntity()
     {
+        if(entityData is EntityMoveableData)
+        {
+            m_EntityMoveableData = (EntityMoveableData)entityData;
+        }
+        else
+        {
+            Debug.LogError("Error Type data need : " + nameof(EntityMoveableData), gameObject);
+        }
+
         // Initialisation - Construction
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
 
-        base.InitEntity();
+        base.InitEntity();;
     }
 
     public override void RestartEntity()
@@ -39,7 +43,7 @@ public class EntityMoveable : Entity
         base.RestartEntity();
 
         // Set/Restart properties
-        m_NavMeshAgent.speed = moveSpeed;
+        m_NavMeshAgent.speed = m_EntityMoveableData.moveSpeed;
         SetGlobalDestination();
         m_CurrentMoveToTarget = null;
     }
@@ -79,10 +83,10 @@ public class EntityMoveable : Entity
     protected override bool DoAttack(Entity targetEntity)
     {
         // On verifie si le range To Do attack est valide
-        if(rangeToDoAttack < rangeDetect)
+        if(m_EntityMoveableData.rangeToDoAttack < entityData.rangeDetect)
         {
             // On test si on est assez prêt
-            if(!(Vector3.Distance(targetEntity.transform.position, transform.position) <= rangeToDoAttack))
+            if(!(Vector3.Distance(targetEntity.transform.position, transform.position) <= m_EntityMoveableData.rangeToDoAttack))
             {
                 // Si non on save la target pour bouger vers la target
                 m_CurrentMoveToTarget = targetEntity;
@@ -106,7 +110,7 @@ public class EntityMoveable : Entity
     {
         if (m_NavMeshAgent.isStopped)
         {
-            if (m_CurrentTimeBeforeNextMove < timeWaitBeforeMove)
+            if (m_CurrentTimeBeforeNextMove < m_EntityMoveableData.timeWaitBeforeMove)
             {
                 m_CurrentTimeBeforeNextMove += Time.deltaTime;
             }
@@ -126,7 +130,7 @@ public class EntityMoveable : Entity
             if(m_CurrentMoveToTarget.IsValidEntity())
             {
                 // On test si on est assez proche
-                if (Vector3.Distance(m_CurrentMoveToTarget.transform.position, transform.position) <= rangeToDoAttack)
+                if (Vector3.Distance(m_CurrentMoveToTarget.transform.position, transform.position) <= m_EntityMoveableData.rangeToDoAttack)
                 {
                     // Si oui on fait l'attack
                     DoAttack(m_CurrentMoveToTarget);

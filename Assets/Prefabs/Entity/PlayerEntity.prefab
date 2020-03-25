@@ -125,10 +125,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62f1a896f3036f4b9d1cdf6efe44b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityData: {fileID: 11400000, guid: 00a85e480d47d014f9e3d5ae642ea721, type: 2}
   alignment: 2
   startLife: 1
   m_CurrentLife: 1
   popAmount: 1
+  isAttackEntity: 1
   typeTarget: 1
   attackContainer: {fileID: 6749672089233891664}
   damageAttack: 1

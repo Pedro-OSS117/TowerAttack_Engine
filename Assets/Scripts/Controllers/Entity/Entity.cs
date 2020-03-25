@@ -5,41 +5,27 @@
 public class Entity : MonoBehaviour
 {
     [Header("Global Props")]
-    public Alignment alignment;
+    public EntityData entityData;
 
-    public int startLife = 1;
     [SerializeField]
     private int m_CurrentLife = 1;
 
-    public int popAmount = 1;
-
     [Header("Attack Props")]
-    public Alignment typeTarget;
     public GameObject attackContainer;
-    public int damageAttack = 1;
-    public int rangeDetect = 1;
-    [Header("Projectile Props")]
-    public bool isProjectileAttack = false;
-    public GameObject prefabProjectile;
-
-    [Header("Time Next Attack")]
-    [Range(0, 10)]
-    public float timeWaitNextAttack = 1;
+    
     private float m_CurrentTimeBeforeNextAttack = 0;
     private bool m_CanAttack = true;
 
-    [Header("Creator Props")]
-    public bool isCreatorEntity;
-    public GameObject toCreate;
-    public int nbrToCreate = 1;
-    public float timeWaitNextCreate = 1;
     private float m_CurrentTimeBeforeNextCreate = 0;
-
-    public static Vector3 myPoint = Vector3.zero;
 
     public void Awake()
     {
         InitEntity();
+
+        /*if(isProjectileAttack && prefabProjectile != null)
+        {
+            Debug.LogError("Error No Prefab Projectile");
+        }*/
     }
 
     // Initialisation - Construction de l'entité
@@ -52,11 +38,14 @@ public class Entity : MonoBehaviour
     // Elle est reset à ses valeurs de depart
     public virtual void RestartEntity()
     {
-        CapsuleCollider colliderAttack;
-        colliderAttack = attackContainer.GetComponent<CapsuleCollider>();
-        colliderAttack.radius = rangeDetect;
+        if(entityData.isAttackEntity && attackContainer)
+        {
+            CapsuleCollider colliderAttack;
+            colliderAttack = attackContainer.GetComponent<CapsuleCollider>();
+            colliderAttack.radius = entityData.rangeDetect;
+        }
         
-        m_CurrentLife = startLife;
+        m_CurrentLife = entityData.startLife;
     }
 
     public virtual void Update()
@@ -94,25 +83,31 @@ public class Entity : MonoBehaviour
     // Attack
     private void UpdateAttack()
     {
-        if (!m_CanAttack)
+        if (entityData.isAttackEntity)
         {
-            if (m_CurrentTimeBeforeNextAttack < timeWaitNextAttack)
+            if (!m_CanAttack)
             {
-                m_CurrentTimeBeforeNextAttack += Time.deltaTime;
-            }
-            else
-            {
-                m_CanAttack = true;
+                if (m_CurrentTimeBeforeNextAttack < entityData.timeWaitNextAttack)
+                {
+                    m_CurrentTimeBeforeNextAttack += Time.deltaTime;
+                }
+                else
+                {
+                    m_CanAttack = true;
+                }
             }
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (m_CanAttack)
+        if (entityData.isAttackEntity)
         {
-            //Debug.Log($"Ontrigger {name}: ", other.gameObject);
-            DetectTarget(other.gameObject);
+            if (m_CanAttack)
+            {
+                //Debug.Log($"Ontrigger {name}: ", other.gameObject);
+                DetectTarget(other.gameObject);
+            }
         }
     }
 
@@ -123,7 +118,7 @@ public class Entity : MonoBehaviour
         {
             // Recuperation de l'entity pour tester l'alignement
             Entity entity = target.GetComponent<Entity>();
-            if (entity && entity.alignment == typeTarget)
+            if (entity && entity.entityData.alignment == entityData.typeTarget)
             {
                 //Debug.Log("Can Hit This");
                 DoAttack(entity);
@@ -136,18 +131,19 @@ public class Entity : MonoBehaviour
         // On verifie si l'entity est valide
         if(targetEntity.IsValidEntity())
         {
-            if (isProjectileAttack)
+            if (entityData.isProjectileAttack)
             {
-                GameObject projectile = PoolManager.Instance.GetElement(prefabProjectile);
+                GameObject projectile = PoolManager.Instance.GetElement(entityData.prefabProjectile);
                 Projectile projectileCompo = projectile.GetComponent<Projectile>();
                 projectile.transform.position = attackContainer.transform.position;
                 projectileCompo.InitTarget(targetEntity);
+                projectileCompo.damage = entityData.damageAttack;
                 projectile.SetActive(true);
             }
             else
             {
                 // On applique les degats
-                targetEntity.DamageEntity(damageAttack);
+                targetEntity.DamageEntity(entityData.damageAttack);
             }
 
             // On set les variables pour l'attente de l'attaque
@@ -165,9 +161,9 @@ public class Entity : MonoBehaviour
     // Creator 
     private void UpdateCreator()
     {
-        if(isCreatorEntity)
+        if(entityData.isCreatorEntity)
         {
-            if (m_CurrentTimeBeforeNextCreate < timeWaitNextCreate)
+            if (m_CurrentTimeBeforeNextCreate < entityData.timeWaitNextCreate)
             {
                 m_CurrentTimeBeforeNextCreate += Time.deltaTime;
             }
@@ -180,11 +176,11 @@ public class Entity : MonoBehaviour
 
     private void CreateNewEntity()
     {
-        if (toCreate != null)
+        if (entityData.toCreate != null)
         {
-            for (int i = 0; i < nbrToCreate; i++)
+            for (int i = 0; i < entityData.nbrToCreate; i++)
             {
-                EntityManager.Instance.PopElement(toCreate, transform.position);
+                EntityManager.Instance.PopElement(entityData.toCreate, transform.position);
             }
             m_CurrentTimeBeforeNextCreate = 0;
         }

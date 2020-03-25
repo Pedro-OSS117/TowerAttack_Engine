@@ -202,16 +202,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0306fe7930d83134f924d9ed796656cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityData: {fileID: 11400000, guid: 880e4793d36bcc44c873780d659abda6, type: 2}
   alignment: 2
-  life: 1
+  startLife: 1
+  m_CurrentLife: 1
   popAmount: 1
+  isAttackEntity: 1
+  typeTarget: 0
   attackContainer: {fileID: 2672909135643723876}
   damageAttack: 1
   rangeDetect: 2
+  isProjectileAttack: 1
+  prefabProjectile: {fileID: 0}
   timeWaitNextAttack: 1
+  isCreatorEntity: 1
+  toCreate: {fileID: 6749672088759616213, guid: 7b00344df04bc7841a45076f9533bad9,
+    type: 3}
+  nbrToCreate: 1
+  timeWaitNextCreate: 1
   moveSpeed: 1
   globalTarget: {fileID: 0}
   timeWaitBeforeMove: 1
+  rangeToDoAttack: 1
 --- !u!54 &2672909135726546349
 Rigidbody:
   m_ObjectHideFlags: 0
