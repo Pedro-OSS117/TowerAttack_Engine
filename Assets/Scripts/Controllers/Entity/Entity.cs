@@ -180,7 +180,7 @@ public class Entity : MonoBehaviour
         {
             for (int i = 0; i < entityData.nbrToCreate; i++)
             {
-                EntityManager.Instance.PopElement(entityData.toCreate, transform.position);
+                EntityManager.Instance.PopElementFromPrefab(entityData.toCreate, transform.position);
             }
             m_CurrentTimeBeforeNextCreate = 0;
         }

@@ -27,6 +27,18 @@ public class MapManager : MonoBehaviour
     public bool showDebugGrid = true;
     //public List<Vector3> debugLockRemoved;
 
+    // Drop Zone FeedBack
+    public GameObject squareFBDropZonePrefab;
+    private GameObject m_dropZoneFBContainer;
+
+    public void Awake()
+    {
+        CreateFeebBackContainer();
+        SetAlignementZone(Alignment.Player, Vector3.zero, mapData.width, mapData.height / 2 + 1);
+        SetAlignementZone(Alignment.IA, new Vector3(0, 0, mapData.height / 2 + 1), mapData.width, mapData.height / 2);
+    }
+
+    #region CREATE MAP
     [ContextMenu("InitializeMapRandomly")]
     public void InitializeMapRandomly()
     {
@@ -130,6 +142,11 @@ public class MapManager : MonoBehaviour
         return Random.Range(0.1f, 100.0f) <= percent;
     }
 
+    private bool IsPosInSquareGridLimit(Vector3 pos)
+    {
+        return pos.x >= 0 && pos.z >= 0 && pos.x < mapData.width && pos.z < mapData.height;
+    }
+
     private SquareState RandomStateWithSkipOneValue(SquareState skippedValue)
     {
         int nbrValueInEnum = System.Enum.GetValues(typeof(SquareState)).Length;
@@ -142,6 +159,101 @@ public class MapManager : MonoBehaviour
         }
         return (SquareState)val;
     }
+    #endregion CREATE MAP
+
+    #region ALIGNMENT
+    public bool TestIsAlignement(Vector3 pos, Alignment alignment)
+    {
+        int index = GetIndexSquareFromPos(pos);
+        if (index != -1)
+        {
+            return mapData.grid[index].aligment == alignment;
+        }
+        return false;
+    }
+
+    private void SetAlignement(Alignment alignment, Vector3 pos)
+    {
+        int index = GetIndexSquareFromPos(pos);
+        if(index != -1)
+        {
+            SetAlignement(alignment, index);
+        }
+    }
+
+    private void SetAlignement(Alignment alignment, int indexSquare)
+    {
+        mapData.grid[indexSquare].aligment = alignment;
+        if(m_dropZoneFBContainer && m_dropZoneFBContainer.transform.childCount > indexSquare)
+        {
+            if(mapData.grid[indexSquare].state == SquareState.Lock
+                || mapData.grid[indexSquare].state == SquareState.Water)
+            {
+                m_dropZoneFBContainer.transform.GetChild(indexSquare).gameObject.SetActive(false);
+            }
+            else
+            {
+                MeshRenderer mr = m_dropZoneFBContainer.transform.GetChild(indexSquare).GetComponent<MeshRenderer>();
+                Color newColor = GetColorFromAlignement(alignment);
+                newColor.a = 0.75f;
+                mr.material.color = newColor;
+            }
+        }
+    }
+
+    private void SetAlignementZone(Alignment alignment, Vector3 pos, int width, int height)
+    {
+        Vector3 tmpPos = pos;
+        for(int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                tmpPos = pos + new Vector3(i, 0, j);
+                int index = GetIndexSquareFromPos(tmpPos);
+                if (index != -1)
+                {
+                    SetAlignement(alignment, index);
+                }
+            }
+        }
+    }
+    #endregion ALIGNMENT
+
+    #region ALIGNEMENT DROP ZONE FEEDBACK
+    private void CreateFeebBackContainer()
+    {
+        m_dropZoneFBContainer = new GameObject(nameof(m_dropZoneFBContainer));
+        m_dropZoneFBContainer.transform.SetParent(m_dropZoneFBContainer.transform);
+        for(int j = 0; j < mapData.height; j++)
+        {
+            for (int i = 0; i < mapData.width; i++)
+            {
+                GameObject newSquareFB = Instantiate(squareFBDropZonePrefab);
+                newSquareFB.transform.SetParent(m_dropZoneFBContainer.transform);
+                newSquareFB.transform.position = new Vector3(i + 0.5f, 0.05f, j + 0.5f);
+            }
+        }
+    }
+
+    public bool TestIfCanDropAtPos(Vector3 pos)
+    {
+        if(TestIsAlignement(pos, Alignment.Player))
+        {
+            int index = GetIndexSquareFromPos(pos);
+            if (index != -1)
+            {
+                return mapData.grid[index].state != SquareState.Lock && mapData.grid[index].state != SquareState.Water;
+            }
+        }
+        return false;
+    }
+
+    public void DisplayDropFeedBack(bool enable)
+    {
+        m_dropZoneFBContainer.SetActive(enable);
+    }
+    #endregion ALIGNEMENT DROP ZONE FEEDBACK
+
     #region SQUARES
     private void InitilizeEmptyGridSquare()
     {
@@ -207,6 +319,16 @@ public class MapManager : MonoBehaviour
                 newSquareView.transform.position = newPosSquare;
             }
         }
+    }
+
+    public bool TestIsStateSquare(Vector3 pos, SquareState state)
+    {
+        int index = GetIndexSquareFromPos(pos);
+        if (index != -1)
+        {
+            return mapData.grid[index].state == state;
+        }
+        return false;
     }
 
     /// <summary>
@@ -526,6 +648,9 @@ public class MapManager : MonoBehaviour
                 posTo.x += downScale;
                 posTo.z += downScale;
                 Gizmos.DrawLine(posFrom, posTo);
+
+                Gizmos.color = GetColorFromAlignement(mapData.grid[i].aligment);
+                Gizmos.DrawWireCube(pos + Vector3.one / 10, Vector3.one / 10);
             }
         }
     }
@@ -542,6 +667,19 @@ public class MapManager : MonoBehaviour
                 return Color.blue;
             case SquareState.Special:
                 return Color.magenta;
+            default:
+                return Color.white;
+        }
+    }
+
+    public Color GetColorFromAlignement(Alignment alignement)
+    {
+        switch (alignement)
+        {
+            case Alignment.IA:
+                return Color.red;
+            case Alignment.Player:
+                return Color.blue;
             default:
                 return Color.white;
         }

@@ -7,12 +7,12 @@ public class PoolManager : SingletonMono<PoolManager>
     public List<PoolProps> prefabsToPool;
 
     private Dictionary<GameObject, Pool> m_AllPools;
-    //private Dictionary<EntityData, Pool> m_AllPoolsByEntityData;
+    private Dictionary<EntityData, Pool> m_AllPoolsByEntityData;
 
     public void Awake()
     {
         m_AllPools = new Dictionary<GameObject, Pool>();
-        //m_AllPoolsByEntityData = new Dictionary<EntityData, Pool>();
+        m_AllPoolsByEntityData = new Dictionary<EntityData, Pool>();
         foreach (PoolProps poolProps in prefabsToPool)
         {
             if (!m_AllPools.ContainsKey(poolProps.prefab))
@@ -20,11 +20,11 @@ public class PoolManager : SingletonMono<PoolManager>
                 Pool pool = new Pool(gameObject, poolProps.prefab, poolProps.nbrPopulate);
                 m_AllPools.Add(poolProps.prefab, pool);
 
-                /*Entity entity = prefab.GetComponent<Entity>();
+                Entity entity = poolProps.prefab.GetComponent<Entity>();
                 if (entity != null)
                 {
                     m_AllPoolsByEntityData.Add(entity.entityData, pool);
-                }*/
+                }
             }
             else
             {
@@ -45,22 +45,10 @@ public class PoolManager : SingletonMono<PoolManager>
 
     public GameObject GetElement(EntityData entityData)
     {
-        foreach(GameObject prefab in m_AllPools.Keys)
-        {
-            Entity entity = prefab.GetComponent<Entity>();
-            if (entity != null)
-            {
-                if(entityData == entity.entityData)
-                {
-                    return GetElement(prefab);
-                }
-            }
-        }
-
-        /*if (m_AllPoolsByEntityData.ContainsKey(entityData))
+        if (m_AllPoolsByEntityData.ContainsKey(entityData))
         {
             return m_AllPoolsByEntityData[entityData].GetAvailable();
-        }*/
+        }
         Debug.LogWarning("Try To Get element that is not pooled !");
         return null;
     }
