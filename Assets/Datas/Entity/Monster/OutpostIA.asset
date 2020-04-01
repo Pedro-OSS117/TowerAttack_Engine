@@ -9,26 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1e0cd309e0e9c34183a5ddd8d677c46, type: 3}
-  m_Name: Soldier
+  m_Script: {fileID: 11500000, guid: dfb749d369f1a2147b306d432aa66a42, type: 3}
+  m_Name: OutpostIA
   m_EditorClassIdentifier: 
-  debugColor: {r: 0, g: 0.33803606, b: 0.9137255, a: 1}
-  alignment: 2
-  startLife: 1
-  popAmount: 2
-  nbrEntityAtPop: 3
+  debugColor: {r: 0.9150943, g: 0.38479736, b: 0, a: 1}
+  alignment: 1
+  startLife: 20
+  popAmount: 0
+  nbrEntityAtPop: 0
   isAttackEntity: 1
-  typeTarget: 1
+  typeTarget: 2
   damageAttack: 1
-  rangeDetect: 3
+  rangeDetect: 2
   isProjectileAttack: 1
   prefabProjectile: {fileID: 2047398191264613396, guid: 874f6c1d26ea70e43927265c60816ae0,
     type: 3}
-  timeWaitNextAttack: 1
-  isCreatorEntity: 0
-  toCreate: {fileID: 0}
-  nbrToCreate: 1
-  timeWaitNextCreate: 1
-  moveSpeed: 1.5
-  timeWaitBeforeMove: 1
-  rangeToDoAttack: 2
+  timeWaitNextAttack: 2
+  isCreatorEntity: 1
+  toCreate: {fileID: 5511027981521120475, guid: 5b6000fef574e7f4f8935a06b360ff4f,
+    type: 3}
+  nbrToCreate: 2
+  timeWaitNextCreate: 5

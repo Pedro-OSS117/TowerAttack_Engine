@@ -74,7 +74,7 @@ public class Entity : MonoBehaviour
 
     public bool IsValidEntity()
     {
-        return gameObject.activeSelf && m_CurrentLife > 0;
+        return gameObject != null && gameObject.activeSelf && m_CurrentLife > 0;
     }
     #endregion LIFE
 

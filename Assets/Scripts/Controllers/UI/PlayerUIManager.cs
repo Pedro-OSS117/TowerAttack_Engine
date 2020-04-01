@@ -9,6 +9,7 @@ public class PlayerUIManager : MonoBehaviour
     public GameObject pauseBackground;
 
     public Text staminaLabel;
+    public Text timerLabel;
 
     public GameObject dropButtonContainer;
 
@@ -79,12 +80,19 @@ public class PlayerUIManager : MonoBehaviour
 
     public void PauseGame()
     {
-        bool isEnable = Time.timeScale != 0;
-        Time.timeScale = isEnable ? 0 : 1;
+        LevelManager.Instance.PauseGame();
 
-        if(pauseBackground)
+        if (pauseBackground)
         {
             pauseBackground.SetActive(!(Time.timeScale != 0));
         }
+    }
+
+    public void UdpateTimer(float currentTimeInSecond)
+    {
+        float currentSecond = currentTimeInSecond % 60;
+        timerLabel.text = ((int)(currentTimeInSecond / 60)).ToString("00");
+        timerLabel.text += " : ";
+        timerLabel.text += currentSecond.ToString("00");
     }
 }

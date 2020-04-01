@@ -190,10 +190,34 @@ public class MapManager : MonoBehaviour
         UpdateViewAlignement(alignment, indexSquare);
     }
 
-    private void SetAlignementZone(Alignment alignment, Vector3 origin, int width, int height)
+    public void SetAlignementZone(Alignment alignment, Vector3 origin, int width, int height)
     {
         Vector3 tmpPos = origin;
         for(int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                tmpPos = origin + new Vector3(i, 0, j);
+                int index = GetIndexSquareFromPos(tmpPos);
+                if (index != -1)
+                {
+                    SetAlignement(alignment, index);
+                }
+            }
+        }
+    }
+
+    public void SetAlignementTopRightOrLeftZone(Alignment alignment, bool isLeft)
+    {
+        Vector3 origin = new Vector3(0, 0, mapData.height / 2);
+        if(!isLeft)
+        {
+            origin = new Vector3(mapData.width / 2, 0, mapData.height / 2);
+        }
+        Vector3 tmpPos = origin;
+        int width = mapData.width / 2;
+        int height = mapData.height / 3;
+        for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {

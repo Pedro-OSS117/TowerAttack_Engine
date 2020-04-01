@@ -9,9 +9,10 @@ public class EntityMoveable : Entity
     [Header("Move Props")]
     private EntityMoveableData m_EntityMoveableData = null;
 
-    [Header("Target")]
     // Variable target
-    public GameObject globalTarget;
+    [Header("Target")]
+    [SerializeField]
+    private GameObject globalTarget;
     
     // Variable de temps d'arret
     private float m_CurrentTimeBeforeNextMove = 0;
@@ -77,6 +78,8 @@ public class EntityMoveable : Entity
         UpdateMoveToTarget();
 
         UpdateStopState();
+
+        ValidateTarget();
     }
 
     #region ATTACK
@@ -153,6 +156,15 @@ public class EntityMoveable : Entity
         else
         {
             ResetToGlobalDestination();
+        }
+    }
+
+    private void ValidateTarget()
+    {
+        if(globalTarget == null || globalTarget != null &&
+            globalTarget.GetComponent<Entity>().IsValidEntity())
+        {
+            globalTarget = EntityManager.Instance.GetGlobalTarget(transform.position, entityData.alignment);
         }
     }
     #endregion MOVE
