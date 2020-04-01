@@ -17,7 +17,16 @@ public class PlayerManager : MonoBehaviour
     [Header("Debug Pop Entity")]
     public EntityData dataToInstantiate;
 
+    // Index courant dans le deck de l'entité qu'on peut dropper.
+    // Si index == -1 on est dans l'etat => pas de drop possible.
     private int m_CurrentIndex = -1;
+
+    [Header("Stamina Props")]
+    // Stamina
+    private const int m_MaxStamina = 9;
+    [SerializeField]
+    private float m_CurrentStamina = 0;
+    public float speedStamina = 1;
 
     private void Awake()
     {
@@ -28,11 +37,21 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        m_MapManager.DisplayDropFeedBack(false);
+        if (m_MapManager)
+        {
+            m_MapManager.DisplayDropFeedBack(false);
+        }
+    }
+
+    public float GetCurrentStamina()
+    {
+        return m_CurrentStamina;
     }
 
     private void Update()
     {
+        UpdateStamina();
+
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             UpdateCurrentPopEntityIndex();
@@ -41,14 +60,34 @@ public class PlayerManager : MonoBehaviour
         PopPlayerEntity();
     }
 
+    private void UpdateStamina()
+    {
+        if(m_CurrentStamina < m_MaxStamina)
+        {
+            m_CurrentStamina += Time.deltaTime * speedStamina;
+            if(m_CurrentStamina > m_MaxStamina)
+            {
+                m_CurrentStamina = m_MaxStamina;
+            }
+        }
+    }
+
     private void UpdateCurrentPopEntityIndex()
     {
+        // Increment Index poru passer à l'entité suivante
         m_CurrentIndex++;
+        // si l'index est superieur aux nombres d'entité présentent dans le deck
         if (m_CurrentIndex >= deck.allEntities.Count)
         {
+            // On le remet à -1
             m_CurrentIndex = -1;
         }
-        m_MapManager.DisplayDropFeedBack(m_CurrentIndex != -1);
+        // Affichage de la zone de drop via la map en fonction de l'index
+        if (m_MapManager)
+        {
+            m_MapManager.DisplayDropFeedBack(m_CurrentIndex != -1);
+        }
+        // Si pas de drop on desaffiche la feedback de drop
         if(m_CurrentIndex == -1)
         {
             UnDisplayFBDrop();

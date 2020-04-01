@@ -34,7 +34,9 @@ public class MapManager : MonoBehaviour
     public void Awake()
     {
         CreateFeebBackContainer();
-        SetAlignementZone(Alignment.Player, Vector3.zero, mapData.width, mapData.height / 2 + 1);
+
+        SetAlignementZone(Alignment.Player, Vector3.zero, mapData.width, mapData.height / 2);
+
         SetAlignementZone(Alignment.IA, new Vector3(0, 0, mapData.height / 2 + 1), mapData.width, mapData.height / 2);
     }
 
@@ -184,31 +186,18 @@ public class MapManager : MonoBehaviour
     private void SetAlignement(Alignment alignment, int indexSquare)
     {
         mapData.grid[indexSquare].aligment = alignment;
-        if(m_dropZoneFBContainer && m_dropZoneFBContainer.transform.childCount > indexSquare)
-        {
-            if(mapData.grid[indexSquare].state == SquareState.Lock
-                || mapData.grid[indexSquare].state == SquareState.Water)
-            {
-                m_dropZoneFBContainer.transform.GetChild(indexSquare).gameObject.SetActive(false);
-            }
-            else
-            {
-                MeshRenderer mr = m_dropZoneFBContainer.transform.GetChild(indexSquare).GetComponent<MeshRenderer>();
-                Color newColor = GetColorFromAlignement(alignment);
-                newColor.a = 0.75f;
-                mr.material.color = newColor;
-            }
-        }
+
+        UpdateViewAlignement(alignment, indexSquare);
     }
 
-    private void SetAlignementZone(Alignment alignment, Vector3 pos, int width, int height)
+    private void SetAlignementZone(Alignment alignment, Vector3 origin, int width, int height)
     {
-        Vector3 tmpPos = pos;
+        Vector3 tmpPos = origin;
         for(int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                tmpPos = pos + new Vector3(i, 0, j);
+                tmpPos = origin + new Vector3(i, 0, j);
                 int index = GetIndexSquareFromPos(tmpPos);
                 if (index != -1)
                 {
@@ -223,7 +212,7 @@ public class MapManager : MonoBehaviour
     private void CreateFeebBackContainer()
     {
         m_dropZoneFBContainer = new GameObject(nameof(m_dropZoneFBContainer));
-        m_dropZoneFBContainer.transform.SetParent(m_dropZoneFBContainer.transform);
+        m_dropZoneFBContainer.transform.SetParent(transform);
         for(int j = 0; j < mapData.height; j++)
         {
             for (int i = 0; i < mapData.width; i++)
@@ -251,6 +240,25 @@ public class MapManager : MonoBehaviour
     public void DisplayDropFeedBack(bool enable)
     {
         m_dropZoneFBContainer.SetActive(enable);
+    }
+
+    private void UpdateViewAlignement(Alignment alignment, int indexSquare)
+    {
+        if (m_dropZoneFBContainer && m_dropZoneFBContainer.transform.childCount > indexSquare)
+        {
+            if (mapData.grid[indexSquare].state == SquareState.Lock
+                || mapData.grid[indexSquare].state == SquareState.Water)
+            {
+                m_dropZoneFBContainer.transform.GetChild(indexSquare).gameObject.SetActive(false);
+            }
+            else
+            {
+                MeshRenderer mr = m_dropZoneFBContainer.transform.GetChild(indexSquare).GetComponent<MeshRenderer>();
+                Color newColor = GetColorFromAlignement(alignment);
+                newColor.a = 0.75f;
+                mr.material.color = newColor;
+            }
+        }
     }
     #endregion ALIGNEMENT DROP ZONE FEEDBACK
 
