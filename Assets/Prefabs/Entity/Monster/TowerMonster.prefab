@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 3278966815619305583}
   - component: {fileID: 3278966815619305617}
   - component: {fileID: 3278966815619305618}
+  - component: {fileID: 8971677319110340865}
   m_Layer: 9
   m_Name: TowerMonster
   m_TagString: Untagged
@@ -125,6 +126,22 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!114 &8971677319110340865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3278966815619305582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &3278966815644116234
 GameObject:
   m_ObjectHideFlags: 0

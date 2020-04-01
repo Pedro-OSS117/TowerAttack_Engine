@@ -1,23 +1,37 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class PopButton : Button, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    [Header("Save Data")]
     public int index = 0;
+
+    public Action<int> OnBeginDragEvent, OnDragEvent, OnEndDragEvent;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("coucou OnBeginDrag : " + index);
+        if (interactable)
+        {
+            // Call Event
+            OnBeginDragEvent?.Invoke(index);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("coucou OnDrag : " + index);
+        if (interactable)
+        {
+            OnDragEvent?.Invoke(index);
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("coucou OnEndDrag : " + index);
+        if (interactable)
+        {
+            OnEndDragEvent?.Invoke(index);
+        }
     }
 }

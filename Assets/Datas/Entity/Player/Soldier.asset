@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e0cd309e0e9c34183a5ddd8d677c46, type: 3}
   m_Name: Soldier
   m_EditorClassIdentifier: 
+  debugColor: {r: 0, g: 0.33803606, b: 0.9137255, a: 1}
   alignment: 2
   startLife: 1
-  popAmount: 1
+  popAmount: 2
   nbrEntityAtPop: 1
   isAttackEntity: 1
   typeTarget: 1

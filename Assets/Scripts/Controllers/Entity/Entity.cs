@@ -68,8 +68,7 @@ public class Entity : MonoBehaviour
         if(m_CurrentLife <= 0)
         {
             // Entity Die
-            //GameObject.Destroy(gameObject);
-            PoolManager.Instance.PoolElement(gameObject);
+            EntityManager.Instance.PoolElement(gameObject);
         }
     }
 

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e0cd309e0e9c34183a5ddd8d677c46, type: 3}
   m_Name: BigSoldier
   m_EditorClassIdentifier: 
+  debugColor: {r: 0.59618235, g: 0, b: 1, a: 1}
   alignment: 2
   startLife: 5
-  popAmount: 1
+  popAmount: 4
   nbrEntityAtPop: 1
   isAttackEntity: 1
   typeTarget: 1

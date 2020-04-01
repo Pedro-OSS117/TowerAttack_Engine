@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e0cd309e0e9c34183a5ddd8d677c46, type: 3}
   m_Name: Monster
   m_EditorClassIdentifier: 
+  debugColor: {r: 0, g: 0, b: 0, a: 0}
   alignment: 1
   startLife: 1
   popAmount: 1
@@ -28,6 +29,6 @@ MonoBehaviour:
   toCreate: {fileID: 0}
   nbrToCreate: 1
   timeWaitNextCreate: 1
-  moveSpeed: 1
+  moveSpeed: 2
   timeWaitBeforeMove: 1
   rangeToDoAttack: 2

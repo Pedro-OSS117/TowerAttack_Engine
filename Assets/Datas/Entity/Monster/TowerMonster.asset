@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb749d369f1a2147b306d432aa66a42, type: 3}
   m_Name: TowerMonster
   m_EditorClassIdentifier: 
+  debugColor: {r: 0, g: 0, b: 0, a: 0}
   alignment: 1
-  startLife: 50
+  startLife: 20
   popAmount: 0
   nbrEntityAtPop: 0
   isAttackEntity: 1

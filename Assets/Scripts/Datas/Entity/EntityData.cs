@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewEntityData", menuName = "TowerAttack/Entity/BasicEntity", order = 1)]
 public class EntityData : ScriptableObject
 {
+    [Header("Debug Var")]
+    public Color debugColor;
+
     [Header("Global Props")]
     public Alignment alignment;
     public int startLife = 1;
