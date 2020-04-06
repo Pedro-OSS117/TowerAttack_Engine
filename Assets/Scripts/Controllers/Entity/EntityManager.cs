@@ -57,7 +57,8 @@ public class EntityManager : SingletonMono<EntityManager>
         Entity entity = newInstantiate.GetComponent<Entity>();
         if (entity is EntityMoveable moveable)
         {
-            moveable.SetGlobalTarget(GetGlobalTarget(position, moveable.entityData.alignment));
+            GameObject target = GetGlobalTarget(position, moveable.entityData.alignment);
+            moveable.SetGlobalTarget(target);
             entity.RestartEntity();
         }
     }

@@ -13,6 +13,12 @@ public class PoolManager : SingletonMono<PoolManager>
     {
         m_AllPools = new Dictionary<GameObject, Pool>();
         m_AllPoolsByEntityData = new Dictionary<EntityData, Pool>();
+    }
+
+    public void Start()
+    {
+        LoadAllEntities();
+
         foreach (PoolProps poolProps in prefabsToPool)
         {
             if (!m_AllPools.ContainsKey(poolProps.prefab))
@@ -29,6 +35,31 @@ public class PoolManager : SingletonMono<PoolManager>
             else
             {
                 Debug.LogWarning("Prefab Key already Exist !", poolProps.prefab);
+            }
+        }
+    }
+
+    public void LoadAllEntities()
+    {
+        PlayerManager playerManager = FindObjectOfType<PlayerManager>();
+        if(playerManager)
+        {
+            foreach(EntityData data in playerManager.deck.allEntities)
+            {
+                // Chargement de la prefab
+                GameObject loadedPrefab = Resources.Load<GameObject>("Prefabs/Entity/Player/" + data.name);
+
+                // Test si elle est deaj
+                PoolProps finded = prefabsToPool.Find(p => p.prefab == loadedPrefab);
+                if(finded.prefab == null)
+                {
+                    PoolProps newPrefabToPool = new PoolProps
+                    {
+                        prefab = loadedPrefab,
+                        nbrPopulate = 10
+                    };
+                    prefabsToPool.Add(newPrefabToPool);
+                }
             }
         }
     }

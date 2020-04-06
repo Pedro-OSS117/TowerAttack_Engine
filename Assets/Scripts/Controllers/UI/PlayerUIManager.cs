@@ -90,9 +90,12 @@ public class PlayerUIManager : MonoBehaviour
 
     public void UdpateTimer(float currentTimeInSecond)
     {
-        float currentSecond = currentTimeInSecond % 60;
-        timerLabel.text = ((int)(currentTimeInSecond / 60)).ToString("00");
-        timerLabel.text += " : ";
-        timerLabel.text += currentSecond.ToString("00");
+        if (timerLabel)
+        {
+            float currentSecond = currentTimeInSecond % 60;
+            timerLabel.text = ((int)(currentTimeInSecond / 60)).ToString("00");
+            timerLabel.text += " : ";
+            timerLabel.text += currentSecond.ToString("00");
+        }
     }
 }

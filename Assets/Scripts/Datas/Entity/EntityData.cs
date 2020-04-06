@@ -7,7 +7,7 @@ public class EntityData : ScriptableObject
 {
     [Header("Debug Var")]
     public Color debugColor;
-
+    
     [Header("Global Props")]
     public Alignment alignment;
     public int startLife = 1;

@@ -105,7 +105,8 @@ public class LevelManager : SingletonMono<LevelManager>
                 Debug.Log("WIN ! YOU'RE THE BEST");
                 break;
         }
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void PauseGame()
