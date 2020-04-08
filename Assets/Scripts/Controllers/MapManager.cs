@@ -334,10 +334,14 @@ public class MapManager : MonoBehaviour
             switch (mapData.grid[i].state)
             {
                 case SquareState.Lock:
+#if UNITY_EDITOR
                     newSquareView = (GameObject)PrefabUtility.InstantiatePrefab(prefabWall);
+#endif
                     break;
                 case SquareState.Water:
+#if UNITY_EDITOR
                     newSquareView = (GameObject)PrefabUtility.InstantiatePrefab(prefabWater);
+#endif
                     break;
             }
 
@@ -529,12 +533,20 @@ public class MapManager : MonoBehaviour
             // Si Edge presente.
             if (arrayEdges[i])
             {
-                // Creation d'une instance de prefab de vue en fonction du state.
-                GameObject newSquareView = (GameObject)PrefabUtility.InstantiatePrefab(prefabEdge);
-                newSquareView.transform.SetParent(navContainer.transform);
-                Vector3 newEdgePos = GetPositionFromIndex(i, width);
-                newEdgePos += adderPosition;
-                newSquareView.transform.position = newEdgePos;
+                GameObject newSquareView = null;
+#if UNITY_EDITOR
+                   // Creation d'une instance de prefab de vue en fonction du state.
+                   newSquareView = (GameObject)PrefabUtility.InstantiatePrefab(prefabEdge);
+#elif UNITY_ANDROID
+
+#endif
+                if (newSquareView != null)
+                {
+                    newSquareView.transform.SetParent(navContainer.transform);
+                    Vector3 newEdgePos = GetPositionFromIndex(i, width);
+                    newEdgePos += adderPosition;
+                    newSquareView.transform.position = newEdgePos;
+                }
             }
         }
     }
@@ -546,35 +558,41 @@ public class MapManager : MonoBehaviour
     {
         // Création de la vue en fonction des Datas
         // GameObject surface = Instantiate(prefabSurface);
-        GameObject surface = (GameObject)PrefabUtility.InstantiatePrefab(prefabSurface);
-        surface.transform.SetParent(navContainer.transform);
-
-        // Calcul de la position de la surface.
-        Vector3 posSurface = surface.transform.position;
-        posSurface.x = mapData.width / 2;
-        posSurface.z = mapData.height / 2;
-
-        // Test si width impair pour ajout de declage sur la position.
-        if (mapData.width % 2 != 0)
+        GameObject surface = null;
+#if UNITY_EDITOR
+        surface = (GameObject)PrefabUtility.InstantiatePrefab(prefabSurface);
+#endif
+        if (surface != null)
         {
-            posSurface.x += 0.5f;
-        }
-        if (mapData.height % 2 != 0)
-        {
-            posSurface.z += 0.5f;
-        }
-        surface.transform.position = posSurface;
+            surface.transform.SetParent(navContainer.transform);
 
-        // Calcul du scale de la surface.
-        Vector3 scaleSurface = surface.transform.localScale;
-        scaleSurface.x = mapData.width;
-        scaleSurface.z = mapData.height;
-        surface.transform.localScale = scaleSurface;
+            // Calcul de la position de la surface.
+            Vector3 posSurface = surface.transform.position;
+            posSurface.x = mapData.width / 2;
+            posSurface.z = mapData.height / 2;
 
-        // Bake NavMesh
-        NavMeshSurface surfaceComponent = surface.GetComponent<NavMeshSurface>();
-        surfaceComponent.BuildNavMesh();
-        surfaceComponent.transform.SetAsFirstSibling();
+            // Test si width impair pour ajout de declage sur la position.
+            if (mapData.width % 2 != 0)
+            {
+                posSurface.x += 0.5f;
+            }
+            if (mapData.height % 2 != 0)
+            {
+                posSurface.z += 0.5f;
+            }
+            surface.transform.position = posSurface;
+
+            // Calcul du scale de la surface.
+            Vector3 scaleSurface = surface.transform.localScale;
+            scaleSurface.x = mapData.width;
+            scaleSurface.z = mapData.height;
+            surface.transform.localScale = scaleSurface;
+
+            // Bake NavMesh
+            NavMeshSurface surfaceComponent = surface.GetComponent<NavMeshSurface>();
+            surfaceComponent.BuildNavMesh();
+            surfaceComponent.transform.SetAsFirstSibling();
+        }
     }
     #endregion SURFACE
 
